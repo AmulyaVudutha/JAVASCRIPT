@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List Example</title>
+</head>
+<body>
+    <ul id="myList">
+        <li>Apple</li>
+        <li>Banana</li>
+        <li>Cherry</li>
+        <li>Date</li>
+        <li>Elderberry</li>
+    </ul>
+
+    <script>
+        // 1. Select all list items
+        const listItems = document.querySelectorAll('#myList li');
+
+        // 2. Log total number of list items
+        console.log("Total list items:", listItems.length);
+
+        // 3. Iterate and log text content
+        listItems.forEach((item, index) => {
+            console.log(`Item ${index + 1}:`, item.textContent);
+
+            // 4. Add "highlight" class to every second item (index 1, 3, ...)
+            if ((index + 1) % 2 === 0) {
+                item.classList.add('highlight');
+            }
+        });
+    </script>
+</body>
+</html>

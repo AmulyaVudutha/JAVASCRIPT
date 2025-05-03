@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <script>
+        function filterObjectProperties(data, minlen) {
+            const res = {};
+            for (let key in data) {
+                if (typeof value == "string" && data[key].length >= minlen) {
+                    res[key] = data[key];
+                }
+            }
+            return res;
+        }
+        const data = { a: "short", b: "longer string", c: 123, d: "very long string indeed" };
+        const filtered = filterObjectProperties(data, 6);
+        console.log(filtered);
+    </script>
+</body>
+</html>

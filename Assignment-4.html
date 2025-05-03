@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Variable Scope</title>
+</head>
+<body>
+    <h2>Open the console to see the scope demo</h2>
+
+    <script>
+        // 🌍 Global Scope
+        var globalVar = "I'm a global variable";
+
+        function showGlobalScope() {
+            console.log("Global Scope:", globalVar); // ✅ Accessible
+        }
+        showGlobalScope();
+        console.log("Accessing globalVar outside:", globalVar); // ✅ Accessible
+
+        // 🔁 Function Scope
+        function functionScopeExample() {
+            var localVar = "I'm a function-scoped variable";
+            console.log("Function Scope:", localVar); // ✅ Accessible here
+        }
+        functionScopeExample();
+        // console.log(localVar); // ❌ Error: localVar is not defined
+
+        // 📦 Block Scope
+        if (true) {
+            let blockLet = "I'm a block-scoped variable (let)";
+            console.log("Block Scope inside if:", blockLet, blockConst); // ✅ Accessible here
+        }
+        // console.log(blockLet); // ❌ Error: blockLet is not defined
+        // console.log(blockConst); // ❌ Error: blockConst is not defined
+
+        // ⚠️ Variable Shadowing
+        let name = "Outer Name";
+
+        function shadowExample() {
+            let name = "Inner Name"; // Shadows the outer 'name'
+            console.log("Shadowed name inside function:", name); // Inner Name
+        }
+        shadowExample();
+        console.log("Original name in global scope:", name); // Outer Name
+    </script>
+</body>
+</html>

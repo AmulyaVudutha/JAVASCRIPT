@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Evaluate Conditions</title>
+</head>
+<body>
+    <h2>Open the console to see the evaluation results</h2>
+
+    <script>
+        function evaluateConditions(obj) {
+            // Condition 1
+            if (obj.age > 18 && obj.hasLicense) {
+                return "Eligible to drive";
+            }
+
+            // Condition 2
+            if (obj.temperature > 30 || obj.humidity > 70) {
+                return "Warning: High discomfort level";
+            }
+
+            // Condition 3
+            if ((obj.role === "admin" || obj.role === "editor") && obj.isActive) {
+                return "Access granted";
+            }
+
+            // Condition 4 - Negation and multiple checks
+            if (!obj.isBanned && obj.loginAttempts < 3 && obj.emailVerified) {
+                return "Login successful";
+            }
+
+            // Condition 5 - Complex condition with nested logic
+            if (obj.subscription === "premium" && (obj.usage < 100 || obj.hasBonus)) {
+                return "Premium access granted";
+            }
+
+            // Condition 6 - Fallback condition
+            return "Conditions not met";
+        }
+
+        // Example test objects
+        const users = [
+            { age: 20, hasLicense: true },
+            { temperature: 32, humidity: 50 },
+            { role: "editor", isActive: true },
+            { isBanned: false, loginAttempts: 2, emailVerified: true },
+            { subscription: "premium", usage: 120, hasBonus: true },
+            { age: 16, hasLicense: false }
+        ];
+
+        // Evaluate each object
+        users.forEach((user, index) => {
+            console.log
