@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-container h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .password-strength, .username-validity {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            font-weight: bold;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .login-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .additional-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        .additional-links a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .additional-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username (Email)</label>
+                <input type="text" id="username" name="username" required placeholder="example@domain.com">
+                <span class="error-message" id="usernameError"></span>
+                <span class="username-validity" id="usernameValidity"></span>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <span class="error-message" id="passwordError"></span>
+                <span class="password-strength" id="passwordStrength"></span>
+            </div>
+            <button type="submit" class="login-btn" id="loginButton" disabled>Login</button>
+        </form>
+        <div class="additional-links">
+            <a href="#">Forgot password?</a>
+            <a href="#">Create account</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const usernameError = document.getElementById('usernameError');
+            const passwordError = document.getElementById('passwordError');
+            const passwordStrength = document.getElementById('passwordStrength');
+            const usernameValidity = document.getElementById('usernameValidity');
+            const loginButton = document.getElementById('loginButton');
+
+            // Check password strength in real-time
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+                validateForm();
+            });
+
+            // Validate username in real-time
+            usernameInput.addEventListener('input', function() {
+                validateUsername(this.value);
+                validateForm();
+            });
+
+            // Form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Final validation before submission
+                const isUsernameValid = validateUsername(usernameInput.value.trim(), true);
+                const isPasswordValid = validatePassword(passwordInput.value.trim());
+                
+                if (isUsernameValid && isPasswordValid) {
+                    // In a real application, you would send this data to a server
+                    // For demonstration, we'll use hardcoded credentials
+                    const validUsername = 'admin@example.com';
+                    const validPassword = 'SecurePass123!';
+                    
+                    if (usernameInput.value.trim() === validUsername && passwordInput.value.trim() === validPassword) {
+                        // Successful login
+                        alert('Login successful! Redirecting...');
+                        // In a real app, you would redirect or set authentication state
+                        // window.location.href = 'dashboard.html';
+                    } else {
+                        // Failed login
+                        alert('Invalid username or password');
+                    }
+                }
+            });
+
+            function checkPasswordStrength(password) {
+                const hasLetter = /[a-zA-Z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+                
+                let strength = "";
+                let color = "";
+                
+                if (password.length < 6 || (!hasNumber && !hasSymbol)) {
+                    strength = "Weak password ❌";
+                    color = "red";
+                } else if (password.length >= 6 && hasLetter && hasNumber && !hasSymbol) {
+                    strength = "Medium password ⚠️";
+                    color = "orange";
+                } else if (password.length >= 8 && hasLetter && hasNumber && hasSymbol) {
+                    strength = "Strong password ✅";
+                    color = "green";
+                } else {
+                    strength = "Medium password ⚠️";
+                    color = "orange";
+                }
+                
+                passwordStrength.textContent = strength;
+                passwordStrength.style.color = color;
+            }
+
+            function validateUsername(username, isSubmission = false) {
+                // Check minimum length
+                if (username.length < 4) {
+                    usernameError.textContent = 'Username must be at least 4 characters';
+                    usernameValidity.textContent = '';
+                    return false;
+                }
+                
+                // Check for @ symbol
+                if (!username.includes('@')) {
+                    if (isSubmission) {
+                        usernameError.textContent = 'Username must be an email (include @ symbol)';
+                    } else {
+                        usernameError.textContent = '';
+                    }
+                    usernameValidity.textContent = 'Username must contain @ symbol';
+                    usernameValidity.style.color = 'red';
+                    return false;
+                }
+                
+                // Check for valid email format (basic check)
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(username)) {
+                    if (isSubmission) {
+                        usernameError.textContent = 'Please enter a valid email address';
+                    } else {
+                        usernameError.textContent = '';
+                    }
+                    usernameValidity.textContent = 'Please enter a valid email';
+                    usernameValidity.style.color = 'red';
+                    return false;
+                }
+                
+                // If all checks pass
+                usernameError.textContent = '';
+                usernameValidity.textContent = 'Valid email format ✅';
+                usernameValidity.style.color = 'green';
+                return true;
+            }
+
+            function validatePassword(password) {
+                if (password.length < 6) {
+                    passwordError.textContent = 'Password must be at least 6 characters';
+                    return false;
+                } else {
+                    passwordError.textContent = '';
+                    return true;
+                }
+            }
+
+            function validateForm() {
+                const isUsernameValid = validateUsername(usernameInput.value.trim());
+                const isPasswordValid = validatePassword(passwordInput.value.trim());
+                
+                loginButton.disabled = !(isUsernameValid && isPasswordValid);
+            }
+        });
+    </script>
+</body>
+</html>
